@@ -49,7 +49,7 @@ public class TreeMain {
 		}while(input!=6);
 		
 		System.out.println("<알림>프로그램을 종료합니다.");
+		System.out.println("옜");
 	}
-	
 	
 }
