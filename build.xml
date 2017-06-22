@@ -1,0 +1,33 @@
+<project name="gbc" default="compile" basedir=".">
+<property name="tree" value="${basedir}/src/tree"/>
+<property name="tree1" value="${basedir}/src/tree/tree"/>
+<property name="src" value="${basedir}/src"/>
+<property name="classes" value="${basedir}/classes"/>
+<property name="first_tree" value="${classes}/tree"/>
+<property name="second_tree" value="${classes}/tree/tree"/>
+
+<target name="clean">
+<delete dir="${classes}"/>
+</target>
+
+<target name="prepare" depends="clean">
+<mkdir dir="${classes}"/>
+<mkdir dir="${first_tree}"/>
+<!--mkdir dir="${second_tree}"/-->
+</target>
+
+<target name="compile" depends="prepare">
+<javac srcdir="${tree}" destdir="${first_tree}"
+	failonerror="true"
+	includeAntRuntime="true"
+>
+</javac>
+<!--delete file="classes/tree/Node.class"/>
+<delete file="classes/tree/Tree.class"/-->
+<!--javac srcdir="${tree1}" destdir="${classes}/tree"
+	failonerror="true"
+	includeAntRuntime="true"
+>
+</javac-->
+</target>
+</project>
