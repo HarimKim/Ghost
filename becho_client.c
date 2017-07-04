@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-#define BUFSIZE 100
+#define BUFSIZE 5
 void error_handling(char *message);
 
 int main(int argc, char **argv) {
@@ -28,25 +28,29 @@ int main(int argc, char **argv) {
 
 	}
 
-	sock = socket(PF_INET, SOCK_DGRAM, 0);
+	sock = socket(PF_INET, SOCK_STREAM, 0);
 	if (sock == -1)
-		error_handling("UDP 소켓 생성 오류");
+		error_handling("UDP socket making error");
 
 	memset(&serv_addr, 0, sizeof(serv_addr));
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = inet_addr(argv[1]);
 	serv_addr.sin_port = htons(atoi(argv[2]));
 
-	sendto(sock, MSG1, strlen(MSG1), 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-	sendto(sock, MSG2, strlen(MSG2), 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-	sendto(sock, MSG3, strlen(MSG3), 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+	if(connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr))==-1)
+		error_handling("connect() error");
 
-	for (i = 0; i < 3; i++)
+	write(sock, MSG1, strlen(MSG1));
+	write(sock, MSG2, strlen(MSG2));
+	write(sock, MSG3, strlen(MSG3));
+
+	//for (i = 0; i < 3; i++)
+	while(1)
 	{
 		addr_size = sizeof(from_addr);
-		str_len = recvfrom(sock, message, BUFSIZE, 0, (struct sockaddr *)&from_addr, &addr_size);
+		str_len = read(sock, message, BUFSIZE);
 		message[str_len] = 0;
-		printf("서버로부터 수신된 %d차 메세지 : %s \n", i, message);
+		printf("%dth message from the Server : %s \n", i, message);
 	}
 
 	close(sock);
